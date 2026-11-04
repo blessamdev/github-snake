@@ -1,4 +1,4 @@
-name: Generate Contribution Snake
+name: Generate Contribution Games
 
 on:
   schedule:
@@ -15,6 +15,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - name: Check out the repo (gets catman.py)
+        uses: actions/checkout@v4
+
+      - name: Generate Cat-Man
+        run: python3 catman.py blessamdev --out dist
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Generate GitHub Contribution Snake
         uses: Platane/snk/svg-only@v3
         with:
@@ -23,7 +31,7 @@ jobs:
             dist/github-snake.svg
             dist/github-snake-dark.svg?palette=github-dark
 
-      - name: Publish Snake
+      - name: Publish both games to the output branch
         uses: crazy-max/ghaction-github-pages@v3.1.0
         with:
           target_branch: output
